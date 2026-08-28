@@ -1,0 +1,42 @@
+﻿@page
+@model AzureSampleApp.Pages.TasksModel
+@{
+    ViewData["Title"] = "My Tasks";
+}
+
+<h1>My Tasks</h1>
+
+<form method="post" asp-page-handler="Add" class="mb-3 d-flex gap-2">
+    <input type="text" name="NewTaskTitle" placeholder="New task..." class="form-control" required />
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>
+
+@if (!Model.Tasks.Any())
+{
+    <p>No tasks yet. Add one above.</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var task in Model.Tasks)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span style="text-decoration: @(task.IsDone ? "line-through" : "none")">
+                    @task.Title
+                </span>
+                <span>
+                    <form method="post" asp-page-handler="Toggle" style="display:inline">
+                        <input type="hidden" name="id" value="@task.Id" />
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">
+                            @(task.IsDone ? "Undo" : "Complete")
+                        </button>
+                    </form>
+                    <form method="post" asp-page-handler="Delete" style="display:inline">
+                        <input type="hidden" name="id" value="@task.Id" />
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                </span>
+            </li>
+        }
+    </ul>
+}
